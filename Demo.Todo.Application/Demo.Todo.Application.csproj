@@ -7,11 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" Version="11.0.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.10" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Demo.Todo.Domain\Demo.Todo.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Todo\Commands\" />
   </ItemGroup>
 
 </Project>

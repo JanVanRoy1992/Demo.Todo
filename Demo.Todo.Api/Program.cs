@@ -4,6 +4,9 @@ using Demo.Todo.Application.Common.Interfaces;
 using Demo.Todo.Domain;
 using Demo.Todo.Application.Todo.Dtos;
 using Microsoft.AspNetCore.Mvc;
+using Demo.Todo.Application.Todo.Queries.GetTodos;
+using Demo.Todo.Application.Todo.Queries.CreateTodos;
+using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,15 +34,15 @@ var summaries = new[]
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
 
-app.MapGet("/todos/{status}", async (ITodoService todoService, TodoStatus status) =>
+app.MapGet("/todos/{status}", async (IMediator mediator, TodoStatus status) =>
 {
-    return await todoService.GetTodosAsync(status);
+    return await mediator.Send(new GetTodosQuery {  Status = status }, default);
 })
 .WithName("GetNewTodos");
 
-app.MapPost("/todos", async (ITodoService todoService, [FromBody]CreateTodoDto dto) =>
+app.MapPost("/todos", async (IMediator mediator, [FromBody]CreateTodoDto dto) =>
 {
-    return await todoService.CreateTodoAsync(dto);
+    return await mediator.Send(new CreateTodosQuery { Description = dto.Description, DueDate = dto.DueDate }, default);
 })
 .WithName("CreateNewTodo");
 

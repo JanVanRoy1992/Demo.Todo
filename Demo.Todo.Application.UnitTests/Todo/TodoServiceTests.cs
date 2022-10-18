@@ -1,12 +1,9 @@
 ﻿using Demo.Todo.Application.Common.Interfaces;
 using Demo.Todo.Application.Todo.Dtos;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using Demo.Todo.Application.Todo.Queries.CreateTodos;
+using Demo.Todo.Application.Todo.Queries.GetTodos;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MediatR;
 
 namespace Demo.Todo.Application.UnitTests.Todo
 {
@@ -15,9 +12,12 @@ namespace Demo.Todo.Application.UnitTests.Todo
         [Fact]
         public async Task GetTodosAsync_Should_ReturnAllNewTodos()
         {
-            var todoService = serviceProvider.GetService<ITodoService>();
+            var mediator = serviceProvider.GetService<IMediator>();
 
-            var todos = await todoService.GetTodosAsync(Domain.TodoStatus.New);
+            var todos = await mediator.Send(new GetTodosQuery
+            {
+                Status = Domain.TodoStatus.New
+            }, default);
 
             Assert.Equal(2, todos.Length);
         }
@@ -31,9 +31,9 @@ namespace Demo.Todo.Application.UnitTests.Todo
                 DueDate = DateTime.Today.AddDays(2)
             };
 
-            var todoService = serviceProvider.GetService<ITodoService>();
+            var mediator = serviceProvider.GetService<IMediator>();
 
-            var result = await todoService.CreateTodoAsync(dto);
+            var result = await mediator.Send(new CreateTodosQuery { Description = dto.Description, DueDate = dto.DueDate }, default);
 
             Assert.Equal(3, result);
         }
