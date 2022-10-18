@@ -2,6 +2,8 @@ using Demo.Todo.Infrastructure;
 using Demo.Todo.Application;
 using Demo.Todo.Application.Common.Interfaces;
 using Demo.Todo.Domain;
+using Demo.Todo.Application.Todo.Dtos;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +36,12 @@ app.MapGet("/todos/{status}", async (ITodoService todoService, TodoStatus status
     return await todoService.GetTodosAsync(status);
 })
 .WithName("GetNewTodos");
+
+app.MapPost("/todos", async (ITodoService todoService, [FromBody]CreateTodoDto dto) =>
+{
+    return await todoService.CreateTodoAsync(dto);
+})
+.WithName("CreateNewTodo");
 
 app.Run();
 
